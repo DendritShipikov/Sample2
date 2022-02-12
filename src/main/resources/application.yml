@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /sample2
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sample2db
+    username: dendrit
+    password: qazwsx
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
