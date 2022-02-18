@@ -9,15 +9,19 @@ import io.jsonwebtoken.Claims;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 import java.security.SignatureException;
 import java.lang.IllegalArgumentException;
 
 @Service
+@PropertySource("classpath:jwt.properties")
 public class JwtService {
 
-    private static final String SECRET = "lol4676rec";
+    @Value("${sample2.secret}")
+    private String secret;
 
     public String generateToken(String username) {
         Date now  = new Date();
@@ -26,14 +30,14 @@ public class JwtService {
             .setSubject(username)
             .setIssuedAt(now)
             .setExpiration(expiration)
-            .signWith(SignatureAlgorithm.HS512, SECRET)
+            .signWith(SignatureAlgorithm.HS512, secret)
             .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(secret)
                 .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
@@ -46,7 +50,7 @@ public class JwtService {
 
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
-            .setSigningKey(SECRET)
+            .setSigningKey(secret)
             .parseClaimsJws(token)
             .getBody();
         return claims.getSubject();
