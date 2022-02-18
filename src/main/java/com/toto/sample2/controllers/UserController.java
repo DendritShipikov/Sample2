@@ -48,14 +48,12 @@ public class UserController {
     
     @PostMapping("/register")
     public String register(@RequestBody UserData userData) throws UserAlreadyExistsException {
-        if (userService.register(userData)) return jwtService.generateToken(userData.getUsername());
-        throw new UserAlreadyExistsException();
+        return userService.register(userData);
     }
 
     @PostMapping("/login")
     public String login(@RequestBody LoginData loginData) throws WrongLoginException {
-        if (!userService.login(loginData)) throw new WrongLoginException();
-        return jwtService.generateToken(loginData.getUsername());
+        return userService.login(loginData);
     }
 
     @GetMapping("/books")

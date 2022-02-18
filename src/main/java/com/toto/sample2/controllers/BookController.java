@@ -43,26 +43,18 @@ public class BookController {
     }
 
     @PostMapping
-    public String addBookPost(@RequestBody @Valid BookData bookData/*, BindingResult bindingResult*/) {
-        /*if (bindingResult.hasErrors()) {
-            return "Error";
-        }*/
+    public void addBookPost(@RequestBody @Valid BookData bookData) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserData userData = (UserData)principal;
         bookData.setUserId(userData.getId());
         bookService.save(bookData);
-        return "OK";
     }
 
     @PutMapping
-    public String editBookPost(@RequestBody @Valid BookData bookData, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "Error";
-        }
+    public void editBookPost(@RequestBody @Valid BookData bookData) {
         bookService.save(bookData);
-        return "OK";
     }
-
+    
     @GetMapping("/{id}")
     public BookData viewBookGet(@PathVariable Long id) {
         BookData bookData = bookService.getById(id);
@@ -70,15 +62,13 @@ public class BookController {
     }
 
     @PostMapping("/buy")
-    public String buyGet(@RequestBody List<Long> ids) {
+    public void buyGet(@RequestBody List<Long> ids) {
         bookService.buy(ids);
-        return "OK";
     }
 
     @DeleteMapping("/{id}")
-    public String deleteBookDelete(@PathVariable Long id) {
+    public void deleteBookDelete(@PathVariable Long id) {
         bookService.delete(id);
-        return "OK";
     } 
     
 }
