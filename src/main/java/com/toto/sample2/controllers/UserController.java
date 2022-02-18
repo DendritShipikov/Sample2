@@ -43,7 +43,7 @@ public class UserController {
     
     @PostMapping("/register")
     public String register(@RequestBody UserData userData) {
-        if (userService.register(userData)) return "OK";
+        if (userService.register(userData)) return jwtService.generateToken(userData.getUsername());
         return "Such username is already exists";
     }
 

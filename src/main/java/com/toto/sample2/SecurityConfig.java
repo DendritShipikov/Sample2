@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -31,25 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        /*httpSecurity
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/user").hasRole("USER")
-            .antMatchers("/register", "/login").permitAll()
-            .and()
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);*/
         httpSecurity
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-                .antMatchers("/api/addbook").hasRole("PUBLISHER")
-                .antMatchers("/api/editbook").hasRole("PUBLISHER")
-                .antMatchers("/api/deletebook").hasRole("PUBLISHER")
-                .antMatchers("/api/mybooks").hasRole("PUBLISHER")
-                .antMatchers("/api/buy").hasAnyRole("PUBLISHER", "USER")
+                .antMatchers(HttpMethod.POST, "/api/book").hasRole("PUBLISHER")
+                .antMatchers(HttpMethod.PUT, "/api/book").hasRole("PUBLISHER")
+                .antMatchers(HttpMethod.DELETE, "/api/book").hasRole("PUBLISHER")
+                .antMatchers("/api/book/buy").hasAnyRole("PUBLISHER", "USER")
+                .antMatchers(HttpMethod.GET, "/api/user/books").hasRole("PUBLISHER")
                 .anyRequest().permitAll()
                 .and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
