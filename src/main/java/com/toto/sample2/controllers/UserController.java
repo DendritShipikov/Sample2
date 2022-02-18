@@ -65,17 +65,5 @@ public class UserController {
         List<BookData> bookDatas = bookService.getByUser(userData.getId());
         return bookDatas;
     }
-
-    @ExceptionHandler(WrongLoginException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String wrongLoginExceptionHandler(WrongLoginException ex) {
-        return "wrong username or password";
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String wrongLoginExceptionHandler(UserAlreadyExistsException ex) {
-        return "user already exists";
-    }
     
 }

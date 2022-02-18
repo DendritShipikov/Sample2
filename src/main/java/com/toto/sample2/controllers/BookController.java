@@ -43,10 +43,10 @@ public class BookController {
     }
 
     @PostMapping
-    public String addBookPost(@RequestBody @Valid BookData bookData, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public String addBookPost(@RequestBody @Valid BookData bookData/*, BindingResult bindingResult*/) {
+        /*if (bindingResult.hasErrors()) {
             return "Error";
-        }
+        }*/
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserData userData = (UserData)principal;
         bookData.setUserId(userData.getId());
