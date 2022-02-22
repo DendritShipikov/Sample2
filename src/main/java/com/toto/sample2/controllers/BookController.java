@@ -51,9 +51,6 @@ public class BookController {
     @PostMapping
     public void addBookPost(@RequestBody @Valid BookData bookData) {
         LOGGER.info("/api/book POST request");
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserData userData = (UserData)principal;
-        bookData.setUserId(userData.getId());
         bookService.save(bookData);
     }
 
