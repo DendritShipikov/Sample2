@@ -7,6 +7,7 @@ import com.toto.sample2.repositories.UserRepository;
 import com.toto.sample2.dto.BookData;
 import com.toto.sample2.dto.UserData;
 import com.toto.sample2.mapper.Mapper;
+import com.toto.sample2.exceptions.UserHasNoAccessException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,17 @@ public class BookService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserData userData = (UserData)principal;
         bookData.setUserId(userData.getId());
+        Book book = bookMapper.toEntity(bookData);
+        bookRepository.save(book);
+    }
+
+    @Transactional
+    public void edit(BookData bookData) throws UserHasNoAccessException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserData userData = (UserData)principal;
+        if (bookRepository.getById(bookData.getId()).getUser().getId() != userData.getId()) {
+            throw new UserHasNoAccessException();
+        }
         Book book = bookMapper.toEntity(bookData);
         bookRepository.save(book);
     }

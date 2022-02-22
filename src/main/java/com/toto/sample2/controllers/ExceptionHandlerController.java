@@ -2,6 +2,7 @@ package com.toto.sample2.controllers;
 
 import com.toto.sample2.exceptions.WrongLoginException;
 import com.toto.sample2.exceptions.UserAlreadyExistsException;
+import com.toto.sample2.exceptions.UserHasNoAccessException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,6 +33,12 @@ public class ExceptionHandlerController {
         return "user already exists";
     }
 
+    @ExceptionHandler(UserHasNoAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handlerUserHasNoAccessException(UserHasNoAccessException ex) {
+        return "user has no access";
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
@@ -41,5 +48,5 @@ public class ExceptionHandlerController {
             .map(x -> x.getDefaultMessage())
             .collect(Collectors.toList());
     }
-
+    
 }

@@ -4,6 +4,7 @@ import com.toto.sample2.services.UserService;
 import com.toto.sample2.services.BookService;
 import com.toto.sample2.dto.UserData;
 import com.toto.sample2.dto.BookData;
+import com.toto.sample2.exceptions.UserHasNoAccessException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,9 +56,9 @@ public class BookController {
     }
 
     @PutMapping
-    public void editBookPost(@RequestBody @Valid BookData bookData) {
+    public void editBookPost(@RequestBody @Valid BookData bookData) throws UserHasNoAccessException {
         LOGGER.info("/api/book PUT request");
-        bookService.save(bookData);
+        bookService.edit(bookData);
     }
     
     @GetMapping("/{id}")
