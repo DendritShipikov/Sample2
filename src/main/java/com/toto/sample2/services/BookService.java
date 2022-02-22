@@ -59,6 +59,7 @@ public class BookService {
         if (bookRepository.getById(bookData.getId()).getUser().getId() != userData.getId()) {
             throw new UserHasNoAccessException();
         }
+        bookData.setUserId(userData.getId());
         Book book = bookMapper.toEntity(bookData);
         bookRepository.save(book);
     }
