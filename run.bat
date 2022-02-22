@@ -1,0 +1,1 @@
+start java -jar target/sample2-1.0-SNAPSHOT.jar
