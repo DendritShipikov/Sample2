@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import static org.springframework.util.StringUtils.hasText;
+import org.springframework.util.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpHeaders;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,8 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
     
     private String getTokenFromRequest(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (hasText(bearer) && bearer.startsWith("Bearer ")) {
+        String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
         return null;
