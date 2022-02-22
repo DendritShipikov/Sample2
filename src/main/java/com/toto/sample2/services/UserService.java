@@ -13,9 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 @Service
 public class UserService {
 
+    static private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+    
     private UserRepository userRepository;
 
     private PasswordEncoder passwordEncoder;
@@ -38,17 +43,25 @@ public class UserService {
     
     @Transactional
     public String register(UserData userData) throws UserAlreadyExistsException {
-        if (userRepository.findByUsername(userData.getUsername()) != null) throw new UserAlreadyExistsException();
+        if (userRepository.findByUsername(userData.getUsername()) != null) {
+            LOGGER.info("User '" + userData.getUsername() + "' is alredy exists");
+            throw new UserAlreadyExistsException();
+        }
         userData.setPassword(passwordEncoder.encode(userData.getPassword()));
         User user = userMapper.toEntity(userData);
         userRepository.save(user);
+        LOGGER.info("user '" + userData.getUsername() + "' registration");
         return jwtService.generateToken(userData.getUsername());
     }
 
     @Transactional
     public String login(LoginData loginData) throws WrongLoginException {
         User user = userRepository.findByUsername(loginData.getUsername());
-        if (user == null || !passwordEncoder.matches(loginData.getPassword(), user.getPassword())) throw new WrongLoginException();
+        if (user == null || !passwordEncoder.matches(loginData.getPassword(), user.getPassword())) {
+            LOGGER.info("Wrong login or password, username = " + loginData.getUsername());
+            throw new WrongLoginException();
+        }
+        LOGGER.info("user '" + loginData.getUsername() + "' login");
         return jwtService.generateToken(loginData.getUsername());
     }
 
